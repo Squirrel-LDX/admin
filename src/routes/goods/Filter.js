@@ -30,9 +30,9 @@ const Filter = ({
   },
 }) => {
   const handleFields = (fields) => {
-    const { createTime } = fields
-    if (createTime.length) {
-      fields.createTime = [createTime[0].format('YYYY-MM-DD'), createTime[1].format('YYYY-MM-DD')]
+    const { endTime } = fields
+    if (endTime.length) {
+      fields.endTime = [endTime[0].format('YYYY-MM-DD'), endTime[1].format('YYYY-MM-DD')]
     }
     return fields
   }
@@ -64,20 +64,20 @@ const Filter = ({
     fields = handleFields(fields)
     onFilterChange(fields)
   }
-  const { username } = filter
+  const { name } = filter
 
-  let initialCreateTime = []
-  if (filter.createTime && filter.createTime[0]) {
-    initialCreateTime[0] = moment(filter.createTime[0])
+  let initialEndTime = []
+  if (filter.createTime && filter.endTime[0]) {
+    initialEndTime[0] = moment(filter.endTime[0])
   }
-  if (filter.createTime && filter.createTime[1]) {
-    initialCreateTime[1] = moment(filter.createTime[1])
+  if (filter.endTime && filter.endTime[1]) {
+    initialEndTime[1] = moment(filter.endTime[1])
   }
 
   return (
     <Row gutter={24}>
       <Col {...ColProps} xl={{ span: 4 }} md={{ span: 8 }}>
-        {getFieldDecorator('username', { initialValue: username })(<Search placeholder="Search UserName" size="large" onSearch={handleSubmit} />)}
+        {getFieldDecorator('name', { initialValue: name })(<Search placeholder="Search goods name" size="large" onSearch={handleSubmit} />)}
       </Col>
       {/* <Col {...ColProps} xl={{ span: 4 }} md={{ span: 8 }}>
         {getFieldDecorator('address', { initialValue: address })(
@@ -90,9 +90,9 @@ const Filter = ({
           />)}
       </Col> */}
       <Col {...ColProps} xl={{ span: 6 }} md={{ span: 8 }} sm={{ span: 12 }}>
-        <FilterItem label="注册时间">
-          {getFieldDecorator('createTime', { initialValue: initialCreateTime })(
-            <RangePicker style={{ width: '100%' }} size="large" onChange={handleChange.bind(null, 'createTime')} />
+        <FilterItem label="到期时间">
+          {getFieldDecorator('endTime', { initialValue: initialEndTime })(
+            <RangePicker style={{ width: '100%' }} size="large" onChange={handleChange.bind(null, 'endTime')} />
           )}
         </FilterItem>
       </Col>

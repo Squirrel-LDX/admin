@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, InputNumber, Radio, Modal, Cascader } from 'antd'
-import city from '../../utils/city'
+import { Form, Input, InputNumber, Radio, Modal, Cascader, Select } from 'antd'
+// import city from '../../utils/city'
 
 const FormItem = Form.Item
+Option = Select.Option
 
 const formItemLayout = {
   labelCol: {
@@ -33,7 +34,6 @@ const modal = ({
         ...getFieldsValue(),
         key: item.key,
       }
-      data.address = data.address.join(' ')
       onOk(data)
     })
   }
@@ -46,19 +46,9 @@ const modal = ({
   return (
     <Modal {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="Name" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('name', {
-            initialValue: item.name,
-            rules: [
-              {
-                required: true,
-              },
-            ],
-          })(<Input />)}
-        </FormItem>
-        <FormItem label="NickName" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('nickName', {
-            initialValue: item.nickName,
+        <FormItem label="UserName" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('username', {
+            initialValue: item.username,
             rules: [
               {
                 required: true,
@@ -82,17 +72,6 @@ const modal = ({
             </Radio.Group>
           )}
         </FormItem>
-        <FormItem label="Age" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('age', {
-            initialValue: item.age,
-            rules: [
-              {
-                required: true,
-                type: 'number',
-              },
-            ],
-          })(<InputNumber min={18} max={100} />)}
-        </FormItem>
         <FormItem label="Phone" hasFeedback {...formItemLayout}>
           {getFieldDecorator('phone', {
             initialValue: item.phone,
@@ -105,32 +84,46 @@ const modal = ({
             ],
           })(<Input />)}
         </FormItem>
-        <FormItem label="E-mail" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('email', {
-            initialValue: item.email,
+        <FormItem label="QQ" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('QQ', {
+            initialValue: item.QQ,
             rules: [
               {
                 required: true,
-                pattern: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/,
-                message: 'The input is not valid E-mail!',
+                pattern: /^\d{5,12}$/,
+                message: 'The input is not valid QQ!',
               },
             ],
           })(<Input />)}
         </FormItem>
-        <FormItem label="Address" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('address', {
-            initialValue: item.address && item.address.split(' '),
+        <FormItem label="GoodsNum" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('goodsNum', {
+            initialValue: item.goodsNum,
             rules: [
               {
                 required: true,
+                pattern: /^\d{1,2}$/,
+                message: 'The input is should not lg than 100!',
               },
             ],
-          })(<Cascader
-            size="large"
-            style={{ width: '100%' }}
-            options={city}
-            placeholder="Pick an address"
-          />)}
+          })(<Input />)}
+        </FormItem>
+        <FormItem label="Power" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('power', {
+            initialValue: item.power,
+            rules: [
+              {
+                required: true,
+                pattern: /^\d{2}$/,
+                message: 'The input is not valid power!',
+              },
+            ],
+          })(
+            <Select>
+              <Option value={10}>普通</Option>
+              <Option value={90}>VIP</Option>
+            </Select>
+          )}
         </FormItem>
       </Form>
     </Modal>

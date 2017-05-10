@@ -25,50 +25,49 @@ const List = ({ onDeleteItem, onEditItem, isMotion, location, ...tableProps }) =
 
   const columns = [
     {
-      title: 'Avatar',
+      title: '头像',
       dataIndex: 'avatar',
       key: 'avatar',
       width: 64,
       className: styles.avatar,
       render: (text) => <img alt={'avatar'} width={24} src={text} />,
     }, {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: '用户名',
+      dataIndex: 'username',
+      key: 'username',
       render: (text, record) => <Link to={`user/${record.id}`}>{text}</Link>,
     }, {
-      title: 'NickName',
-      dataIndex: 'nickName',
-      key: 'nickName',
-    }, {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-    }, {
-      title: 'Gender',
+      title: '性别',
       dataIndex: 'isMale',
       key: 'isMale',
       render: (text) => <span>{text
             ? 'Male'
             : 'Female'}</span>,
     }, {
-      title: 'Phone',
+      title: '手机号',
       dataIndex: 'phone',
       key: 'phone',
     }, {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
+      title: 'QQ',
+      dataIndex: 'QQ',
+      key: 'QQ',
     }, {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-    }, {
-      title: 'CreateTime',
+      title: '注册时间',
       dataIndex: 'createTime',
       key: 'createTime',
     }, {
-      title: 'Operation',
+      title: '在线商品数量',
+      dataIndex: 'goodsNum',
+      key: 'goodsNum',
+    }, {
+      title: '权限',
+      dataIndex: 'power',
+      key: 'power',
+      render: (text) => <span>{text === 10
+            ? '普通'
+            : 'VIP'}</span>,
+    }, {
+      title: '操作',
       key: 'operation',
       width: 100,
       render: (text, record) => {
