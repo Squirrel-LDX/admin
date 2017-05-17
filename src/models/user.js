@@ -3,7 +3,6 @@ import { query } from '../services/users'
 import { parse } from 'qs'
 
 export default {
-
   namespace: 'user',
 
   state: {
@@ -22,7 +21,7 @@ export default {
   },
 
   subscriptions: {
-    setup ({ dispatch, history }) {
+    setup({ dispatch, history }) {
       history.listen(location => {
         if (location.pathname === '/user') {
           dispatch({
@@ -35,10 +34,10 @@ export default {
   },
 
   effects: {
-
-    *query ({ payload }, { call, put }) {
+    *query({ payload }, { call, put }) {
       payload = parse(location.search.substr(1))
       const data = yield call(query, payload)
+      console.log(data)
       if (data) {
         yield put({
           type: 'querySuccess',
@@ -54,7 +53,7 @@ export default {
       }
     },
 
-    *'delete' ({ payload }, { call, put }) {
+    *delete({ payload }, { call, put }) {
       const data = yield call(remove, { id: payload })
       if (data.success) {
         yield put({ type: 'query' })
@@ -63,7 +62,7 @@ export default {
       }
     },
 
-    *create ({ payload }, { call, put }) {
+    *create({ payload }, { call, put }) {
       const data = yield call(create, payload)
       if (data.success) {
         yield put({ type: 'hideModal' })
@@ -73,7 +72,7 @@ export default {
       }
     },
 
-    *update ({ payload }, { select, call, put }) {
+    *update({ payload }, { select, call, put }) {
       const id = yield select(({ user }) => user.currentItem.id)
       const newUser = { ...payload, id }
       const data = yield call(update, newUser)
@@ -84,34 +83,32 @@ export default {
         throw data
       }
     },
-
   },
 
   reducers: {
-
-    querySuccess (state, action) {
+    querySuccess(state, action) {
       const { list, pagination } = action.payload
-      return { ...state,
+      return {
+        ...state,
         list,
         pagination: {
           ...state.pagination,
           ...pagination,
-        } }
+        },
+      }
     },
 
-    showModal (state, action) {
+    showModal(state, action) {
       return { ...state, ...action.payload, modalVisible: true }
     },
 
-    hideModal (state) {
+    hideModal(state) {
       return { ...state, modalVisible: false }
     },
 
-    switchIsMotion (state) {
+    switchIsMotion(state) {
       localStorage.setItem('antdAdminUserIsMotion', !state.isMotion)
       return { ...state, isMotion: !state.isMotion }
     },
-
   },
-
 }

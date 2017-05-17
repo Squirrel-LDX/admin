@@ -6,18 +6,32 @@ let goodsListData = Mock.mock({
   'data|10-20': [
     {
       id: '@id',
-      name: '@name',
-      username: '@cname',
-      'price|5-100.1-2': 1,
-      realPrice () {
+      'name|+1': [
+        '欧达数码相机',
+        '摄像头',
+        '小米笔记本',
+        '数码相机',
+        '笔记本电脑',
+        '无线传呼机',
+        'ThinkPad笔记本',
+      ],
+      'username|+1': ['llwwlql', 'ldj', 'hlk1135'],
+      'price|+1': [890, 360, 3200, 580, 690, 230, 1600],
+      realPrice() {
         return this.price - 2
       },
-      startTime: '@datetime',
+      startTime: '2017-05-15',
       endTime: '@now',
       desc: '@cparagraph',
-      commetNum: /\d{1,4}/,
-      image () {
-        return Mock.Random.image('500x500', Mock.Random.color(), '#757575', 'png', this.name.substr(0, 1))
+      commetNum: /\d{1,2}/,
+      image() {
+        return Mock.Random.image(
+          '500x500',
+          Mock.Random.color(),
+          '#757575',
+          'png',
+          'G'
+        )
       },
     },
   ],
@@ -50,7 +64,7 @@ const NOTFOUND = {
 let database = goodsListData.data
 
 module.exports = {
-  [`GET ${apiPrefix}/goods`] (req, res) {
+  [`GET ${apiPrefix}/goods`](req, res) {
     const { query } = req
     let { pageSize, page, ...other } = query
     pageSize = pageSize || 10
@@ -60,7 +74,7 @@ module.exports = {
 
     for (let key in other) {
       if ({}.hasOwnProperty.call(other, key)) {
-        newData = newData.filter((item) => {
+        newData = newData.filter(item => {
           if ({}.hasOwnProperty.call(item, key)) {
             if (key === 'endTime') {
               console.log([...other[key], item.endTime])
@@ -73,7 +87,10 @@ module.exports = {
               }
               return true
             }
-            return String(item[key]).trim().indexOf(decodeURI(other[key]).trim()) > -1
+            return (
+              String(item[key]).trim().indexOf(decodeURI(other[key]).trim()) >
+              -1
+            )
           }
           return true
         })
@@ -86,7 +103,7 @@ module.exports = {
     })
   },
 
-  [`GET ${apiPrefix}/good/:id`] (req, res) {
+  [`GET ${apiPrefix}/good/:id`](req, res) {
     const { id } = req.params
     const data = queryArray(database, id, 'id')
     if (data) {
@@ -96,7 +113,7 @@ module.exports = {
     }
   },
 
-  [`DELETE ${apiPrefix}/goods/:id`] (req, res) {
+  [`DELETE ${apiPrefix}/good/:id`](req, res) {
     const { id } = req.params
     const data = queryArray(database, id, 'id')
     if (data) {

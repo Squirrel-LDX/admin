@@ -10,14 +10,11 @@ const FormItem = Form.Item
 const Login = ({
   login,
   dispatch,
-  form: {
-    getFieldDecorator,
-    validateFieldsAndScroll,
-  },
+  form: { getFieldDecorator, validateFieldsAndScroll },
 }) => {
   const { loginLoading } = login
 
-  function handleOk () {
+  function handleOk() {
     validateFieldsAndScroll((errors, values) => {
       if (errors) {
         return
@@ -40,7 +37,13 @@ const Login = ({
                 required: true,
               },
             ],
-          })(<Input size="large" onPressEnter={handleOk} placeholder="Username" />)}
+          })(
+            <Input
+              size="large"
+              onPressEnter={handleOk}
+              placeholder="Username"
+            />
+          )}
         </FormItem>
         <FormItem hasFeedback>
           {getFieldDecorator('password', {
@@ -49,16 +52,24 @@ const Login = ({
                 required: true,
               },
             ],
-          })(<Input size="large" type="password" onPressEnter={handleOk} placeholder="Password" />)}
+          })(
+            <Input
+              size="large"
+              type="password"
+              onPressEnter={handleOk}
+              placeholder="Password"
+            />
+          )}
         </FormItem>
         <Row>
-          <Button type="primary" size="large" onClick={handleOk} loading={loginLoading}>
+          <Button
+            type="primary"
+            size="large"
+            onClick={handleOk}
+            loading={loginLoading}
+          >
             Sign in
           </Button>
-          <p>
-            <span>Username：guest</span>
-            <span>Password：guest</span>
-          </p>
         </Row>
 
       </form>

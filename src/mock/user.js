@@ -4,34 +4,35 @@ const config = require('../utils/config')
 const { apiPrefix } = config
 
 let usersListData = Mock.mock({
-  'data|80-100': [
+  'data|3': [
     {
       id: '@id',
-      username: '@cname',
-      phone: /^1[34578]\d{9}$/,
-      'age|11-99': 1,
-      isMale: '@boolean',
+      'username|+1': ['ldj', 'hlk1135', 'llwwlql'],
+      'phone|+1': ['17862821996', '17862821585', '17862826440'],
+      'age|+1': ['21', '22', '21'],
+      isMale: true,
       QQ: /^\d{5,12}$/,
-      createTime: '@datetime',
+      createTime: '2017-05-15',
       goodsNum: /^[1-5]$/,
       'power|+1': [10, 90],
-      avatar () {
-        return Mock.Random.image('100x100', Mock.Random.color(), '#757575', 'png', this.username.substr(0, 1))
+      avatar() {
+        return Mock.Random.image(
+          '100x100',
+          Mock.Random.color(),
+          '#757575',
+          'png',
+          this.username.substr(0, 1)
+        )
       },
     },
   ],
 })
 
-
 let database = usersListData.data
 
 const userPermission = {
-  DEFAULT: [
-    'dashboard', 'chart',
-  ],
-  ADMIN: [
-    'dashboard', 'users', 'UIElement', 'UIElementIconfont', 'chart',
-  ],
+  DEFAULT: ['dashboard', 'chart'],
+  ADMIN: ['dashboard', 'users', 'UIElement', 'UIElementIconfont', 'chart'],
   DEVELOPER: ['dashboard', 'users', 'UIElement', 'UIElementIconfont', 'chart'],
 }
 
@@ -41,12 +42,14 @@ const adminUsers = [
     username: 'admin',
     password: 'admin',
     permissions: userPermission.ADMIN,
-  }, {
+  },
+  {
     id: 1,
     username: 'guest',
     password: 'guest',
     permissions: userPermission.DEFAULT,
-  }, {
+  },
+  {
     id: 2,
     username: '吴彦祖',
     password: '123456',
@@ -79,30 +82,33 @@ const NOTFOUND = {
 }
 
 module.exports = {
-
-  [`POST ${apiPrefix}/user/login`] (req, res) {
+  [`POST ${apiPrefix}/user/login`](req, res) {
     const { username, password } = req.body
-    const user = adminUsers.filter((item) => item.username === username)
+    const user = adminUsers.filter(item => item.username === username)
 
     if (user.length > 0 && user[0].password === password) {
       const now = new Date()
       now.setDate(now.getDate() + 1)
-      res.cookie('token', JSON.stringify({ id: user[0].id, deadline: now.getTime() }), {
-        maxAge: 900000,
-        httpOnly: true,
-      })
+      res.cookie(
+        'token',
+        JSON.stringify({ id: user[0].id, deadline: now.getTime() }),
+        {
+          maxAge: 900000,
+          httpOnly: true,
+        }
+      )
       res.json({ success: true, message: 'Ok' })
     } else {
       res.status(400).end()
     }
   },
 
-  [`GET ${apiPrefix}/user/logout`] (req, res) {
+  [`GET ${apiPrefix}/user/logout`](req, res) {
     res.clearCookie('token')
     res.status(200).end()
   },
 
-  [`GET ${apiPrefix}/user`] (req, res) {
+  [`GET ${apiPrefix}/user`](req, res) {
     const cookie = req.headers.cookie || ''
     const cookies = qs.parse(cookie.replace(/\s/g, ''), { delimiter: ';' })
     const response = {}
@@ -127,7 +133,7 @@ module.exports = {
     res.json(response)
   },
 
-  [`GET ${apiPrefix}/users`] (req, res) {
+  [`GET ${apiPrefix}/users`](req, res) {
     const { query } = req
     let { pageSize, page, ...other } = query
     pageSize = pageSize || 10
@@ -136,7 +142,7 @@ module.exports = {
     let newData = database
     for (let key in other) {
       if ({}.hasOwnProperty.call(other, key)) {
-        newData = newData.filter((item) => {
+        newData = newData.filter(item => {
           if ({}.hasOwnProperty.call(item, key)) {
             if (key === 'createTime') {
               const start = new Date(other[key][0]).getTime()
@@ -148,7 +154,10 @@ module.exports = {
               }
               return true
             }
-            return String(item[key]).trim().indexOf(decodeURI(other[key]).trim()) > -1
+            return (
+              String(item[key]).trim().indexOf(decodeURI(other[key]).trim()) >
+              -1
+            )
           }
           return true
         })
@@ -161,10 +170,18 @@ module.exports = {
     })
   },
 
-  [`POST ${apiPrefix}/user`] (req, res) {
+  [`POST ${apiPrefix}/user`](req, res) {
     const newData = req.body
     newData.createTime = Mock.mock('@now')
-    newData.avatar = newData.avatar || Mock.Random.image('100x100', Mock.Random.color(), '#757575', 'png', newData.username.substr(0, 1))
+    newData.avatar =
+      newData.avatar ||
+      Mock.Random.image(
+        '100x100',
+        Mock.Random.color(),
+        '#757575',
+        'png',
+        newData.username.substr(0, 1)
+      )
     newData.id = Mock.mock('@id')
 
     database.unshift(newData)
@@ -172,7 +189,7 @@ module.exports = {
     res.status(200).end()
   },
 
-  [`GET ${apiPrefix}/user/:id`] (req, res) {
+  [`GET ${apiPrefix}/user/:id`](req, res) {
     const { id } = req.params
     const data = queryArray(database, id, 'id')
     if (data) {
@@ -182,23 +199,23 @@ module.exports = {
     }
   },
 
-  [`DELETE ${apiPrefix}/user/:id`] (req, res) {
+  [`DELETE ${apiPrefix}/user/:id`](req, res) {
     const { id } = req.params
     const data = queryArray(database, id, 'id')
     if (data) {
-      database = database.filter((item) => item.id !== id)
+      database = database.filter(item => item.id !== id)
       res.status(204).end()
     } else {
       res.status(404).json(NOTFOUND)
     }
   },
 
-  [`PATCH ${apiPrefix}/user/:id`] (req, res) {
+  [`PATCH ${apiPrefix}/user/:id`](req, res) {
     const { id } = req.params
     const editItem = req.body
     let isExist = false
 
-    database = database.map((item) => {
+    database = database.map(item => {
       if (item.id === id) {
         isExist = true
         return Object.assign({}, item, editItem)
